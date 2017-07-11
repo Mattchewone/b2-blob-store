@@ -1,0 +1,25 @@
+{
+  "name": "b2-blob-store",
+  "version": "1.0.0",
+  "homepage": "https://github.com/Mattchewone/b2-blob-store",
+  "description": "b2 abstract blob store",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Mattchewone/b2-blob-store.git"
+  },
+  "keywords": [
+    "blob",
+    "b2-blob-store",
+    "fs",
+    "backblaze",
+    "file",
+    "files",
+    "binary"
+  ],
+  "bugs": {
+    "url": "https://github.com/Mattchewone/b2-blob-store/issues"
+  },
+  "author": "Matt Chaffe",
+  "license": "MIT"
+}
