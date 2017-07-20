@@ -1,5 +1,9 @@
 # b2-blob-store
-backblaze b2 blob store
+Backblaze B2 blob store implementation.
+
+This is not currently working and is a WIP, this is not published to NPM.
+
+[![blob-store-compatible](badge.png)](https://github.com/maxogden/abstract-blob-store)
 
 ## Example
 ```js
@@ -34,3 +38,7 @@ request({ url, headers }, (err, resp, body) => {
   });
 });
 ```
+
+## TBD
+- [ ] Get file size from the stream so we can add to `Content-Length`
+- [ ] SHA1 the file data so we can verify the data upload
