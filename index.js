@@ -2,6 +2,7 @@ const debug = require('debug')('b2-blob-store');
 const duplex = require('duplexify');
 const mime = require('mime');
 const request = require('request').defaults({ json: true });
+const concat = require('concat-stream');
 
 
 module.exports = Client;
@@ -124,6 +125,63 @@ Client.prototype.createReadStream = function (opts) {
 
   read.on('error', function(err) {
     proxy.destroy(err);
+  });
+
+  return proxy;
+}
+
+Client.prototype.createWriteStream = function(options, cb) {
+  let self = this;
+  let proxy = duplex();
+
+  let bucket = options.bucket || this.bucket;
+  if (!bucket) {
+    let err = new Error('Must specify bucket');
+    cb(err);
+    proxy.destroy(err);
+    return proxy;
+  }
+
+  // Need to get upload_url first
+  let uploadUrl = `${this.apiUrl}/b2api/v1/b2_get_upload_url`;
+  self.request({ url: uploadUrl, method: 'POST', json: { bucketId: bucket } }, function(err, resp, body) {
+    if (err) {
+      proxy.destroy(err);
+      return cb(err);
+    }
+    if (resp.statusCode > 299) {
+      let error = new Error(JSON.stringify({ code: resp.statusCode, error: body }))
+      proxy.destroy(error);
+      return cb(error);
+    }
+
+    let newSession = {
+      method: 'POST',
+      url: body.uploadUrl,
+      headers: {
+        'X-Bz-File-Name': options.key,
+        'Content-Type': mime.lookup(options.key),
+        'Authorization': body.authorizationToken,
+        'X-Bz-Content-Sha1': 'do_not_verify', // need access to data so we can sha1 the data
+        'Content-Length': 38649
+      }
+    };
+
+    let upload = self.request(newSession);
+    proxy.setWritable(upload);
+
+    upload.on('response', function(resp) {
+      resp.pipe(concat(function(body) {
+        let meta = JSON.parse(body);
+        console.log(meta)
+        cb(null, meta);
+      }));
+    });
+
+    upload.on('error', function(err) {
+      proxy.destroy(err);
+      cb(err);
+    });
   });
 
   return proxy;
