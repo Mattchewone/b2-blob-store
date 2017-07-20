@@ -48,8 +48,8 @@ Client.prototype.request = function(opts, cb) {
 }
 
 Client.prototype.exists = function(opts, cb) {
-  var self = this
-  var bucket = opts.bucket || this.bucket
+  var self = this;
+  var bucket = opts.bucket || this.bucket;
 
   if (!bucket) {
     return proxy.destroy(new Error('Must specify bucket'));
@@ -93,7 +93,6 @@ Client.prototype.remove = function(opts, cb) {
       return cb(err);
     }
     if (resp.statusCode > 299) {
-      console.log(data);
       return cb(new Error(data));
     }
     cb(null);
@@ -163,7 +162,7 @@ Client.prototype.createWriteStream = function(options, cb) {
         'Content-Type': mime.lookup(options.key),
         'Authorization': body.authorizationToken,
         'X-Bz-Content-Sha1': 'do_not_verify', // need access to data so we can sha1 the data
-        'Content-Length': 38649
+        'Content-Length': 10
       }
     };
 
@@ -173,7 +172,6 @@ Client.prototype.createWriteStream = function(options, cb) {
     upload.on('response', function(resp) {
       resp.pipe(concat(function(body) {
         let meta = JSON.parse(body);
-        console.log(meta)
         cb(null, meta);
       }));
     });
