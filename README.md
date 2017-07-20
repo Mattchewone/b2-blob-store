@@ -3,7 +3,7 @@ Backblaze B2 blob store implementation.
 
 This is not currently working and is a WIP, this is not published to NPM.
 
-[![blob-store-compatible](badge.png)](https://github.com/maxogden/abstract-blob-store)
+[![blob-store-compatible](https://raw.githubusercontent.com/maxogden/abstract-blob-store/master/badge.png)](https://github.com/maxogden/abstract-blob-store)
 
 ## Example
 ```js
